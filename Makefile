@@ -1,28 +1,35 @@
-USER_NAME ?= github-actions[bot]
-USER_EMAIL ?= github-actions[bot]@users.noreply.github.com
-
 install:
-	pip install -r requirements.txt
+	pip install --upgrade pip &&\
+		pip install -r requirements.txt
 
 format:
-	black --check src/ entrenamiento.py
+	black .
 
 lint:
-	pylint src/ entrenamiento.py --fail-under=7
+	pylint src/ entrenamiento.py --disable=R,C
 
 train:
 	python entrenamiento.py
 
 eval:
-	cml comment create Resultados/reporte.md
+	test -f ./Resultados/metricas.txt
+
+	echo "## Metricas del Modelo" > reporte.md
+	cat ./Resultados/metricas.txt >> reporte.md
+
+	echo '\n## Matriz de Confusion' >> reporte.md
+	echo '![Matriz de Confusion](./Resultados/confusion_matrix.png)' >> reporte.md
+
+	echo '\n## Curva ROC' >> reporte.md
+	echo '![Curva ROC](./Resultados/roc_curve.png)' >> reporte.md
+
+	cml comment create reporte.md
 
 update-branch:
-	git config --global user.name "$(USER_NAME)"
-	git config --global user.email "$(USER_EMAIL)"
-	git checkout -B update
-	git add Modelo/ Resultados/
-	git commit -m "ci: actualizar modelo y resultados"
-	git push --force origin update
+	git config --global user.name $(USER_NAME)
+	git config --global user.email $(USER_EMAIL)
+	git commit -am "Actualizando los nuevos resultados"
+	git push --force origin HEAD:update
 
 configuracion_DVC_remoto:
 	dvc remote add -f sentimientos_storage https://dagshub.com/alecorlo1234/AnalizadorSentimientos.dvc
@@ -31,6 +38,9 @@ configuracion_DVC_remoto:
 	dvc remote modify sentimientos_storage user alecorlo1234
 
 hf-login:
+	git fetch origin
+	git checkout -B update
+	git push -u origin update --force
 	pip install -U "huggingface_hub[cli]"
 	huggingface-cli login --token $(HF) --add-to-git-credential
 

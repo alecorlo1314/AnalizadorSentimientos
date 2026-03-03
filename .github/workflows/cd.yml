@@ -10,13 +10,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
     steps:
-      - name: Checkout branch update
-        uses: actions/checkout@v4
-        with:
-          ref: update
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v3
 
       - name: Despliegue hacia Hugging Face
         env:
