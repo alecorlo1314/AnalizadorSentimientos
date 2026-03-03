@@ -14,3 +14,4 @@ tqdm
 black
 pylint
 dvc
+pathspec==0.11.2
