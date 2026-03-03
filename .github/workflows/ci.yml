@@ -1,0 +1,75 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cache de dependencias pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Configurar CML
+        uses: iterative/setup-cml@v2
+
+      - name: Instalar dependencias
+        run: make install
+
+      - name: Descargar recursos NLTK
+        run: python -c "import nltk; nltk.download('stopwords')"
+
+      - name: Verificar formato de código
+        run: make format
+
+      - name: Analizar calidad de código
+        run: make lint
+
+      - name: Configurar DVC
+        env:
+          DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
+        run: make configuracion_DVC_remoto
+
+      - name: Descargar datos
+        env:
+          DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
+        run: |
+          dvc remote modify sentimientos_storage password $DAGSHUB_TOKEN
+          dvc pull -r sentimientos_storage
+
+      - name: Entrenar modelo
+        run: make train
+
+      - name: Publicar reporte
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: make eval
+
+      - name: Actualizar branch update
+        env:
+          NAME: ${{ secrets.USER_NAME }}
+          EMAIL: ${{ secrets.USER_EMAIL }}
+        run: |
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          make update-branch USER_NAME="$NAME" USER_EMAIL="$EMAIL"

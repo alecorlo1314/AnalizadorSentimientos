@@ -1,1 +1,15 @@
-/Datos
+.venv/
+__pycache__/
+*.pyc
+Datos/
+Resultados/
+.env
+kaggle.json
+*.log
+mlruns/
+EOF
+Modelo/
+mlflow.db
+.vscode/
+mlruns/
+Datos/tokens_cache*.pkl
