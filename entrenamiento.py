@@ -14,7 +14,7 @@ os.makedirs("Resultados", exist_ok=True)
 # ── 1. Cargar datos ────────────────────────────────────────────────────────────
 print("=" * 50)
 print("1. Cargando datos...")
-df = cargar_datos("Datos/IMDB Dataset Spanish.csv")
+df = cargar_datos("Datos/IMDB Dataset SPANISH.csv")
 X, y = separar_features(df)
 X_train, X_test, y_train, y_test = dividir_datos(X, y)
 print(f"   Train: {len(X_train):,} | Test: {len(X_test):,}")
