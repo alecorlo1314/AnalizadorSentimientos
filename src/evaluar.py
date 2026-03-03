@@ -30,7 +30,10 @@ def evaluar_modelo(modelo, X_test, y_test, umbral=0.5):
     print(f"F1-Score:  {f1:.4f}")
     print(f"Precision: {precision:.4f}")
     print(f"Recall:    {recall:.4f}")
-    print("\n", classification_report(y_test, y_pred, target_names=["Negativo", "Positivo"]))
+    print(
+        "\n",
+        classification_report(y_test, y_pred, target_names=["Negativo", "Positivo"]),
+    )
 
     # Guardar métricas en texto
     with open("Resultados/metricas.txt", "w", encoding="utf-8") as f:
@@ -39,7 +42,9 @@ def evaluar_modelo(modelo, X_test, y_test, umbral=0.5):
         f.write(f"F1-Score:  {f1:.4f}\n")
         f.write(f"Precision: {precision:.4f}\n")
         f.write(f"Recall:    {recall:.4f}\n\n")
-        f.write(classification_report(y_test, y_pred, target_names=["Negativo", "Positivo"]))
+        f.write(
+            classification_report(y_test, y_pred, target_names=["Negativo", "Positivo"])
+        )
 
     # Matriz de confusión
     cm = confusion_matrix(y_test, y_pred)
@@ -58,8 +63,14 @@ def evaluar_modelo(modelo, X_test, y_test, umbral=0.5):
     )
     for i in range(cm.shape[0]):
         for j in range(cm.shape[1]):
-            ax.text(j, i, format(cm[i, j], "d"), ha="center", va="center",
-                    color="white" if cm[i, j] > cm.max() / 2 else "black")
+            ax.text(
+                j,
+                i,
+                format(cm[i, j], "d"),
+                ha="center",
+                va="center",
+                color="white" if cm[i, j] > cm.max() / 2 else "black",
+            )
     plt.tight_layout()
     plt.savefig("Resultados/confusion_matrix.png")
     plt.close()

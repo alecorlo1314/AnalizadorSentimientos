@@ -10,6 +10,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.model_selection import cross_val_score
 from sklearn.calibration import CalibratedClassifierCV
 import os
+
 os.environ["MLFLOW_TRACKING_URI"] = "sqlite:///mlflow.db"
 
 
@@ -74,28 +75,45 @@ def entrenar_modelos(
             "nombre": "TFIDF_LogisticRegression",
             "X": X_tfidf,
             "modelo": LogisticRegression(max_iter=300, C=1.0, random_state=42),
-            "params": {"vectorizador": "TF-IDF", "clasificador": "LogisticRegression",
-                       "max_features": 20000, "C": 1.0},
+            "params": {
+                "vectorizador": "TF-IDF",
+                "clasificador": "LogisticRegression",
+                "max_features": 20000,
+                "C": 1.0,
+            },
         },
         {
             "nombre": "TFIDF_LinearSVC",
             "X": X_tfidf,
-            "modelo": CalibratedClassifierCV(LinearSVC(max_iter=1000, C=1.0, random_state=42)),
+            "modelo": CalibratedClassifierCV(
+                LinearSVC(max_iter=1000, C=1.0, random_state=42)
+            ),
             "params": {"vectorizador": "TF-IDF", "clasificador": "LinearSVC", "C": 1.0},
         },
         {
             "nombre": "Word2Vec_LogisticRegression",
             "X": X_w2v,
             "modelo": LogisticRegression(max_iter=300, C=1.0, random_state=42),
-            "params": {"vectorizador": "Word2Vec", "clasificador": "LogisticRegression",
-                       "vector_size": 100, "window": 5, "C": 1.0},
+            "params": {
+                "vectorizador": "Word2Vec",
+                "clasificador": "LogisticRegression",
+                "vector_size": 100,
+                "window": 5,
+                "C": 1.0,
+            },
         },
         {
             "nombre": "Word2Vec_LinearSVC",
             "X": X_w2v,
-            "modelo": CalibratedClassifierCV(LinearSVC(max_iter=1000, C=1.0, random_state=42)),
-            "params": {"vectorizador": "Word2Vec", "clasificador": "LinearSVC",
-                       "vector_size": 100, "C": 1.0},
+            "modelo": CalibratedClassifierCV(
+                LinearSVC(max_iter=1000, C=1.0, random_state=42)
+            ),
+            "params": {
+                "vectorizador": "Word2Vec",
+                "clasificador": "LinearSVC",
+                "vector_size": 100,
+                "C": 1.0,
+            },
         },
     ]
 
@@ -105,18 +123,18 @@ def entrenar_modelos(
         inicio = time.time()
 
         scores_f1 = cross_val_score(
-            combo["modelo"], combo["X"], y_train,
-            cv=5, scoring="f1", n_jobs=-1
+            combo["modelo"], combo["X"], y_train, cv=5, scoring="f1", n_jobs=-1
         )
         scores_acc = cross_val_score(
-            combo["modelo"], combo["X"], y_train,
-            cv=5, scoring="accuracy", n_jobs=-1
+            combo["modelo"], combo["X"], y_train, cv=5, scoring="accuracy", n_jobs=-1
         )
         duracion = time.time() - inicio
 
         f1_mean = scores_f1.mean()
         acc_mean = scores_acc.mean()
-        print(f"  F1: {f1_mean:.4f} | Accuracy: {acc_mean:.4f} | Tiempo: {duracion:.1f}s")
+        print(
+            f"  F1: {f1_mean:.4f} | Accuracy: {acc_mean:.4f} | Tiempo: {duracion:.1f}s"
+        )
 
         # Registrar en MLflow
         with mlflow.start_run(run_name=combo["nombre"]):
@@ -126,12 +144,14 @@ def entrenar_modelos(
             mlflow.log_metric("accuracy_cv", acc_mean)
             mlflow.log_metric("duracion_segundos", duracion)
 
-        resultados.append({
-            "nombre": combo["nombre"],
-            "f1": f1_mean,
-            "accuracy": acc_mean,
-            "combo": combo,
-        })
+        resultados.append(
+            {
+                "nombre": combo["nombre"],
+                "f1": f1_mean,
+                "accuracy": acc_mean,
+                "combo": combo,
+            }
+        )
 
     # ── 5. Seleccionar el mejor por F1 ─────────────────────────────────────────
     mejor = max(resultados, key=lambda x: x["f1"])

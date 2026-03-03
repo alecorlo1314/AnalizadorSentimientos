@@ -6,6 +6,7 @@ from src.entrenar import entrenar_modelos, corpus_a_matriz
 from src.evaluar import evaluar_modelo, generar_reporte
 from src.guardar import guardar_modelo, guardar_tfidf, guardar_word2vec
 import os
+
 os.environ["MLFLOW_TRACKING_URI"] = "sqlite:///mlflow.db"
 
 os.makedirs("Resultados", exist_ok=True)
@@ -64,4 +65,7 @@ print("=" * 50)
 if tfidf is not None:
     print("\n8. Generando explicaciones LIME...")
     from src.explicar import guardar_explicacion_global
-    guardar_explicacion_global(tfidf, modelo, X_test_texto, y_test.reset_index(drop=True))
+
+    guardar_explicacion_global(
+        tfidf, modelo, X_test_texto, y_test.reset_index(drop=True)
+    )

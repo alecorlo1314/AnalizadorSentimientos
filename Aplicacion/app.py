@@ -1,5 +1,6 @@
 import sys
 import os
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import gradio as gr
@@ -16,12 +17,13 @@ from src.explicar import explicar_prediccion, graficar_explicacion
 
 # ── Cargar modelo y vectorizador ───────────────────────────────────────────────
 MODELO_PATH = os.path.join(os.path.dirname(__file__), "../Modelo/clasificador.skops")
-TFIDF_PATH  = os.path.join(os.path.dirname(__file__), "../Modelo/tfidf.skops")
+TFIDF_PATH = os.path.join(os.path.dirname(__file__), "../Modelo/tfidf.skops")
 
 unsafe_clasi = sio.get_untrusted_types(file=MODELO_PATH)
 unsafe_tfidf = sio.get_untrusted_types(file=TFIDF_PATH)
 modelo = sio.load(MODELO_PATH, trusted=unsafe_clasi)
-tfidf  = sio.load(TFIDF_PATH,  trusted=unsafe_tfidf)
+tfidf = sio.load(TFIDF_PATH, trusted=unsafe_tfidf)
+
 
 # ── Función principal ──────────────────────────────────────────────────────────
 def analizar(texto: str):
@@ -48,9 +50,13 @@ def analizar(texto: str):
     proba_neg = proba[0]
     es_positivo = proba_pos >= 0.5
 
-    etiqueta    = "😊 POSITIVO" if es_positivo else "😞 NEGATIVO"
-    color       = "#4caf7d"    if es_positivo else "#e05c5c"
-    descripcion = "La reseña expresa una opinión favorable." if es_positivo else "La reseña expresa una opinión desfavorable."
+    etiqueta = "😊 POSITIVO" if es_positivo else "😞 NEGATIVO"
+    color = "#4caf7d" if es_positivo else "#e05c5c"
+    descripcion = (
+        "La reseña expresa una opinión favorable."
+        if es_positivo
+        else "La reseña expresa una opinión desfavorable."
+    )
 
     # Barra de probabilidad
     barra_pos = f'<div style="height:8px;width:{proba_pos*100:.0f}%;background:#4caf7d;border-radius:4px 0 0 4px;display:inline-block;"></div>'
@@ -87,8 +93,15 @@ def analizar(texto: str):
         fig, ax = plt.subplots(figsize=(7, 3))
         fig.patch.set_facecolor("#0f1117")
         ax.set_facecolor("#0f1117")
-        ax.text(0.5, 0.5, f"LIME no disponible:\n{e}",
-                ha="center", va="center", color="white", transform=ax.transAxes)
+        ax.text(
+            0.5,
+            0.5,
+            f"LIME no disponible:\n{e}",
+            ha="center",
+            va="center",
+            color="white",
+            transform=ax.transAxes,
+        )
         ax.axis("off")
 
     return resultado_html, fig
@@ -126,9 +139,15 @@ footer { display: none !important; }
 """
 
 EJEMPLOS = [
-    ["Esta película es una obra maestra del cine moderno. Los actores están increíbles y la historia me dejó sin palabras. La recomiendo completamente."],
-    ["Qué pérdida de tiempo tan terrible. La trama no tiene sentido, los actores actúan fatal y el final fue decepcionante. No la vean."],
-    ["El film tiene sus momentos buenos y malos. La fotografía es bonita pero la historia es confusa. En general es una película del montón."],
+    [
+        "Esta película es una obra maestra del cine moderno. Los actores están increíbles y la historia me dejó sin palabras. La recomiendo completamente."
+    ],
+    [
+        "Qué pérdida de tiempo tan terrible. La trama no tiene sentido, los actores actúan fatal y el final fue decepcionante. No la vean."
+    ],
+    [
+        "El film tiene sus momentos buenos y malos. La fotografía es bonita pero la historia es confusa. En general es una película del montón."
+    ],
 ]
 
 with gr.Blocks(css=CSS, title="Análisis de Sentimientos") as demo:
@@ -169,7 +188,9 @@ with gr.Blocks(css=CSS, title="Análisis de Sentimientos") as demo:
                 text-align:center;border:1px solid #2a2d3a;color:#555;">
                 El resultado aparecerá aquí</div>"""
             )
-            gr.HTML("<div style='margin-top:12px;font-family:Syne,sans-serif;font-size:0.7rem;color:#444;letter-spacing:0.12em;'>EXPLICABILIDAD · LIME</div>")
+            gr.HTML(
+                "<div style='margin-top:12px;font-family:Syne,sans-serif;font-size:0.7rem;color:#444;letter-spacing:0.12em;'>EXPLICABILIDAD · LIME</div>"
+            )
             lime_plot = gr.Plot()
 
     btn.click(fn=analizar, inputs=texto_input, outputs=[resultado, lime_plot])

@@ -11,3 +11,4 @@ pandas
 scikit_learn
 skops
 tqdm
+black
