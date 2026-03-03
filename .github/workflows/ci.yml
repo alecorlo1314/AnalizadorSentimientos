@@ -55,8 +55,8 @@ jobs:
         env:
           DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
         run: |
-          dvc remote modify sentimientos_storage password $DAGSHUB_TOKEN
-          dvc pull -r sentimientos_storage
+          dvc remote modify sentimiento_storage password $DAGSHUB_TOKEN
+          dvc pull -r sentimiento_storage
 
       - name: Entrenar modelo
         run: make train

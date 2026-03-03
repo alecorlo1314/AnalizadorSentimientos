@@ -32,10 +32,10 @@ update-branch:
 	git push --force origin HEAD:update
 
 configuracion_DVC_remoto:
-	dvc remote add -f sentimientos_storage https://dagshub.com/alecorlo1234/AnalizadorSentimientos.dvc
-	dvc remote default sentimientos_storage
-	dvc remote modify sentimientos_storage auth basic
-	dvc remote modify sentimientos_storage user alecorlo1234
+	dvc remote add -f sentimiento_storage https://dagshub.com/alecorlo1234/AnalizadorSentimientos.dvc
+	dvc remote default sentimiento_storage
+	dvc remote modify sentimiento_storage auth basic
+	dvc remote modify sentimiento_storage user alecorlo1234
 
 hf-login:
 	git fetch origin
