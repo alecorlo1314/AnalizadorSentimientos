@@ -13,3 +13,4 @@ skops
 tqdm
 black
 pylint
+dvc
