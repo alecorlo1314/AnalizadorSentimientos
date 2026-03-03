@@ -16,4 +16,3 @@ wordcloud
 black
 pylint
 cml
-EOF
