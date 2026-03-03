@@ -6,7 +6,6 @@ from gensim.models import Word2Vec
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import LinearSVC
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.pipeline import Pipeline
 from sklearn.model_selection import cross_val_score
 from sklearn.calibration import CalibratedClassifierCV
 import os

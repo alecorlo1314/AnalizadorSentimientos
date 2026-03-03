@@ -1,2 +1,7 @@
+[core]
+    remote = sentimiento_storage
 ['remote "sentimiento_storage"']
     url = https://dagshub.com/alecorlo1234/AnalizadorSentimientos.dvc
+    auth = basic
+    user = alecorlo1234
+    password = a9cc6c486119c736678b39ba7576d9c46aa5fc46
