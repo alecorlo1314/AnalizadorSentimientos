@@ -49,7 +49,6 @@ push-hub:
 
 	hf upload alecorlo1234/AnalizadorSentimientos ./Aplicacion --repo-type=space --commit-message="Sincronizar Aplicacion"
 	hf upload alecorlo1234/AnalizadorSentimientos ./Modelo /Modelo --repo-type=space --commit-message="Sincronizar Modelo"
-	hf upload alecorlo1234/AnalizadorSentimientos ./src /src/explicar.py --repo-type=space --commit-message="Sincronizar Codigo Explicacion"
-	hf upload alecorlo1234/AnalizadorSentimientos ./src /src/preprocesar.py --repo-type=space --commit-message="Sincronizar Codigo Preprocesamiento"
+	hf upload alecorlo1234/AnalizadorSentimientos ./src/explicar.py ./src/preprocesar.py --repo-type=space --commit-message="Sincronizar Codigo src"
 
 deploy: hf-login push-hub
