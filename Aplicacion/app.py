@@ -17,7 +17,7 @@ from src.explicar import explicar_prediccion, graficar_explicacion
 
 # ── Cargar modelo y vectorizador ───────────────────────────────────────────────
 MODELO_PATH = "Modelo/clasificador.skops"
-TFIDF_PATH  = "Modelo/tfidf.skops"
+TFIDF_PATH = "Modelo/tfidf.skops"
 
 unsafe_clasi = sio.get_untrusted_types(file=MODELO_PATH)
 unsafe_tfidf = sio.get_untrusted_types(file=TFIDF_PATH)
@@ -152,7 +152,8 @@ EJEMPLOS = [
 
 with gr.Blocks(css=CSS, title="Análisis de Sentimientos") as demo:
 
-    gr.HTML("""
+    gr.HTML(
+        """
     <div style="text-align:center;padding:32px 0 16px;border-bottom:1px solid #1f2235;margin-bottom:24px;">
         <div style="font-family:'Syne',sans-serif;font-size:0.75rem;letter-spacing:0.2em;color:#4caf7d;margin-bottom:8px;">
             NLP · ANÁLISIS DE SENTIMIENTOS
@@ -165,7 +166,8 @@ with gr.Blocks(css=CSS, title="Análisis de Sentimientos") as demo:
             mostrando qué palabras influyeron en la decisión.
         </p>
     </div>
-    """)
+    """
+    )
 
     with gr.Row():
         with gr.Column(scale=1):
@@ -196,13 +198,15 @@ with gr.Blocks(css=CSS, title="Análisis de Sentimientos") as demo:
     btn.click(fn=analizar, inputs=texto_input, outputs=[resultado, lime_plot])
     texto_input.submit(fn=analizar, inputs=texto_input, outputs=[resultado, lime_plot])
 
-    gr.HTML("""
+    gr.HTML(
+        """
     <div style="text-align:center;padding:20px 0;margin-top:20px;border-top:1px solid #1f2235;">
         <span style="font-family:'Syne',sans-serif;font-size:0.7rem;color:#333;letter-spacing:0.15em;">
             MODELO: TF-IDF + LOGISTIC REGRESSION · DATASET: IMDB 50K EN ESPAÑOL · EXPLICABILIDAD: LIME
         </span>
     </div>
-    """)
+    """
+    )
 
 if __name__ == "__main__":
     demo.launch()
