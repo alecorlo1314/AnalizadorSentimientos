@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 from src.datos import cargar_datos, separar_features, dividir_datos
-from src.preprocesar import preprocesar_serie, tokens_a_texto
+from src.preprocesar import preprocesar_serie
 from src.entrenar import entrenar_modelos, corpus_a_matriz
 from src.evaluar import evaluar_modelo, generar_reporte
 from src.guardar import guardar_modelo, guardar_tfidf, guardar_word2vec
@@ -9,25 +9,31 @@ import os
 
 os.environ["MLFLOW_TRACKING_URI"] = "sqlite:///mlflow.db"
 
+#PASO 1. CREAMOS LA CARPETA RESULTADOS SI NO EXISTE
 os.makedirs("Resultados", exist_ok=True)
 
-# ── 1. Cargar datos ────────────────────────────────────────────────────────────
+#PASO 2. CARGAMOS DATOS
 print("=" * 50)
 print("1. Cargando datos...")
 df = cargar_datos("Datos/IMDB Dataset SPANISH.csv")
+
+#PASO 3. SEPARAMOS FEATURES Y TARGET
 X, y = separar_features(df)
+
+#PASO 4. DIVIDIMOS EN TRAIN Y TEST
 X_train, X_test, y_train, y_test = dividir_datos(X, y)
 print(f"   Train: {len(X_train):,} | Test: {len(X_test):,}")
 
-# ── 2. Preprocesar ─────────────────────────────────────────────────────────────
+#PASO 5. PREPROCESAMIENTO DE TEXTO (LEMMATIZACIÓN + STOPWORDS)
 print("\n2. Preprocesando texto...")
 X_train_tokens = preprocesar_serie(X_train).tolist()
 X_test_tokens = preprocesar_serie(X_test).tolist()
 
+#PASO 6. CONVERTIR TOKENS A TEXTO SEPARADOS POR UN ESPACION PARA TF-IDF
 X_train_texto = pd.Series([" ".join(t) for t in X_train_tokens])
 X_test_texto = pd.Series([" ".join(t) for t in X_test_tokens])
 
-# ── 3. Entrenar y comparar modelos ─────────────────────────────────────────────
+#PASO 7. ENTRENAR MODELOS Y COMPARAR CON MLflow
 print("\n3. Entrenando y comparando modelos con MLflow...")
 modelo, tfidf, modelo_w2v, nombre_modelo, f1_cv = entrenar_modelos(
     X_train_texto, X_train_tokens, y_train

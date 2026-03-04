@@ -44,6 +44,7 @@ def documento_a_vector(tokens: list, modelo_w2v) -> np.ndarray:
 
 
 def corpus_a_matriz(tokens_lista: list, modelo_w2v) -> np.ndarray:
+    print("Convirtiendo corpus a matriz de vectores Word2Vec...")
     """Convierte lista de listas de tokens a matriz de vectores."""
     return np.array([documento_a_vector(t, modelo_w2v) for t in tokens_lista])
 
@@ -65,10 +66,13 @@ def entrenar_modelos(
     X_w2v = corpus_a_matriz(X_train_tokens, modelo_w2v)
 
     # ── 2. Configurar TF-IDF ───────────────────────────────────────────────────
+    print("Configurando TF-IDF...")
     tfidf = TfidfVectorizer(max_features=20_000, ngram_range=(1, 2), sublinear_tf=True)
+    print("Calculando TF-IDF...")
     X_tfidf = tfidf.fit_transform(X_train_texto)
 
     # ── 3. Definir combinaciones ───────────────────────────────────────────────
+    print("Definiendo combinaciones de modelos...")
     combinaciones = [
         {
             "nombre": "TFIDF_LogisticRegression",
