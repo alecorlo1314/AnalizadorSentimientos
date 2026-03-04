@@ -45,7 +45,11 @@ hf-login:
 	hf auth login --token $(HF) --add-to-git-credential
 
 push-hub:
+#hf upload <REPO_ID> <LOCAL_PATH> <REMOTE_PATH> \ --repo-type=<TYPE> \ --commit-message="<MENSAJE>"
+
 	hf upload alecorlo1234/AnalizadorSentimientos ./Aplicacion --repo-type=space --commit-message="Sincronizar Aplicacion"
 	hf upload alecorlo1234/AnalizadorSentimientos ./Modelo /Modelo --repo-type=space --commit-message="Sincronizar Modelo"
+	hf upload alecorlo1234/AnalizadorSentimientos ./src /src/explicar.py --repo-type=space --commit-message="Sincronizar Codigo Explicacion"
+	hf upload alecorlo1234/AnalizadorSentimientos ./src /src/preprocesar.py --repo-type=space --commit-message="Sincronizar Codigo Preprocesamiento"
 
 deploy: hf-login push-hub
