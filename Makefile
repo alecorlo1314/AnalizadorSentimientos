@@ -46,9 +46,9 @@ hf-login:
 
 push-hub:
 #hf upload <REPO_ID> <LOCAL_PATH> <REMOTE_PATH> \ --repo-type=<TYPE> \ --commit-message="<MENSAJE>"
-
-	hf upload alecorlo1234/AnalizadorSentimientos ./Aplicacion --repo-type=space --commit-message="Sincronizar Aplicacion"
-	hf upload alecorlo1234/AnalizadorSentimientos ./Modelo /Modelo --repo-type=space --commit-message="Sincronizar Modelo"
-	hf upload alecorlo1234/AnalizadorSentimientos ./src/explicar.py ./src/preprocesar.py --repo-type=space --commit-message="Sincronizar Codigo src"
+	huggingface-cli upload alecorlo1234/AnalizadorSentimientos ./Aplicacion --repo-type=space --commit-message="Sincronizar Aplicacion"
+	huggingface-cli upload alecorlo1234/AnalizadorSentimientos ./Modelo /Modelo --repo-type=space --commit-message="Sincronizar Modelo"
+	huggingface-cli upload alecorlo1234/AnalizadorSentimientos ./src/preprocesar.py /src/preprocesar.py --repo-type=space --commit-message="Sincronizar preprocesar"
+	huggingface-cli upload alecorlo1234/AnalizadorSentimientos ./src/explicar.py /src/explicar.py --repo-type=space --commit-message="Sincronizar explicar"
 
 deploy: hf-login push-hub
