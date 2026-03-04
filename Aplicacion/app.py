@@ -16,8 +16,8 @@ from src.preprocesar import limpiar_texto, tokenizar, tokens_a_texto
 from src.explicar import explicar_prediccion, graficar_explicacion
 
 # ── Cargar modelo y vectorizador ───────────────────────────────────────────────
-MODELO_PATH = os.path.join(os.path.dirname(__file__), "../Modelo/clasificador.skops")
-TFIDF_PATH = os.path.join(os.path.dirname(__file__), "../Modelo/tfidf.skops")
+MODELO_PATH = "Modelo/clasificador.skops"
+TFIDF_PATH  = "Modelo/tfidf.skops"
 
 unsafe_clasi = sio.get_untrusted_types(file=MODELO_PATH)
 unsafe_tfidf = sio.get_untrusted_types(file=TFIDF_PATH)
