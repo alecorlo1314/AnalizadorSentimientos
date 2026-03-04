@@ -39,8 +39,7 @@ configuracion_DVC_remoto:
 
 hf-login:
 	git fetch origin
-	git checkout -B update
-	git push -u origin update --force
+	git switch -c update --track origin/update || git switch update
 	pip install -U "huggingface_hub[cli]"
 	git config --global credential.helper store
 	hf auth login --token $(HF) --add-to-git-credential
